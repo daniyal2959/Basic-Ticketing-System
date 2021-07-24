@@ -1,0 +1,363 @@
+@import 'clear', 'mixins';
+
+header{
+    @include dFlex(row,space-between);
+    padding: 1em;
+
+    .telephone{
+        @include dFlex(row-reverse);
+
+        >img{
+            margin-right: 0.5em;
+        }
+
+        p{
+            font-size: 24px;
+        }
+    }
+}
+
+main{
+    .report{
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        
+        .reportCard{
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+            margin: 1em;
+            @include dFlex();
+
+            p{
+                width: 100%;
+                font-size: 16px;
+                color: white;
+                @include dFlex(row, space-evenly);
+
+                span{
+                    font-size: 50px;
+                }
+            }
+        }
+    }
+
+    .messenger{
+        @include dFlex();
+
+        > *{
+            margin: 1em;
+            padding: 1em;
+        }
+
+        aside{
+            flex: 1 0 0;
+            background-color: #34495E;
+            border-radius: 10px;
+            height: 550px;
+            overflow-y: auto;
+
+            .person{
+                @include dFlex(row, flex-start);
+                cursor: pointer;
+
+                &:not(:first-child){
+                    padding-top: 1em;
+                }
+                
+                &:not(:last-child){
+                    border-bottom: 1px solid rgba(255,255,255,0.5);
+                    padding-bottom: 1em;
+                }
+
+                p{
+                    color: white;
+                    margin-right: 0.5em;
+                }
+
+                img{
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 100%;
+                    position: relative;
+                }
+
+                .personAvatar{
+
+                }
+            }
+        }
+
+        
+    }
+}
+
+#content{
+    flex: 5 0 0;
+    background-image: url('../img/266864-white-background-1920x1200-for-lockscreen.png');
+    background-position: center center;
+    background-size: 110%;
+    height: 550px;
+    margin: 0 1em;
+    border-radius: 1em;
+    position: relative;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.04);
+    overflow-y: auto;
+
+    header{
+        justify-content: center;
+        padding-top: 0.5em;
+
+        .ticketTitle{
+            width: 500px;
+            text-align: center;
+            @include dFlex(row-reverse);
+
+            > div{
+                width: 12px;
+                height: 12px;
+                background-color: #E74C3C;
+                border-radius: 100%;
+                margin-left: 1em;
+            }
+        }
+
+        &:before, &:after{
+            content: '';
+            width: 100%;
+            height: 1px;
+            background-color: #707070;
+        }
+    }
+
+    section#messagesContent{
+        @include dFlex(column, flex-start, flex-start);
+
+        > div{
+            @include dFlex(row, flex-start, flex-start);
+            width: 500px;
+            text-align: justify;
+            margin-bottom: 1em;
+
+            .message{
+                padding: 1em;
+                position: relative;
+
+                &:before{
+                    position: absolute;
+                    bottom: 0;
+                }
+                color: white;
+
+                p{
+                    font-size: 13px;
+                }
+            }
+
+            img{
+                width: 64px;
+                height: 64px;
+                border-radius: 100%;
+                margin: 0 1em;
+            }
+        }
+
+        .sentMessage{
+            .message{
+                background-color: #24B19E;
+                border-radius: 20px 20px 0 20px;    
+            }
+        }
+
+        .inboxMessage{
+            flex-direction: row-reverse;
+            align-self: flex-end;
+
+            .message{
+                background-color: #34495E;
+                border-radius: 20px 20px 20px 0;
+            }
+        }
+    }
+
+    footer{
+        width: 100%;
+        padding: 0.75em 0;
+        background-color: white;
+        border-radius: 0 0 20px 20px;
+        position: fixed;
+        bottom: 1em;
+        left: 0;
+        margin-left: 1em;
+        @include dFlex(row, space-between);
+
+        img{
+            margin: 0 1em;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .attachment{
+            position: relative;
+            z-index: 2;
+            @include dFlex();
+
+            input[type=file]{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: 4;
+                opacity: 0;
+                cursor: pointer;
+
+            }
+
+            .attaches{
+                padding: 1em;
+                position: absolute;
+                width: 300px;
+                bottom: 4em;
+                z-index: 4;
+                left: 0;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 3px 30px rgba(0,0,0,0.04);
+                transform: scale(0);
+                transition: 0.5s all;
+
+                .attach{
+                    @include dFlex(row, space-between);
+                    margin: 1em 0;
+                    img:first-child{
+                        border-radius: 10px;
+                        margin-left: 0.5em;
+                        box-shadow: 0 0 1px 1px rgb(0,0,0);
+                        padding: 0.5em;
+                        box-sizing: unset;
+                    }
+                }
+
+                &:after{
+                    content: '';
+                    position: absolute;
+                    bottom: -1em;
+                    left: 1em;
+                    width: 26px;
+                    height: 18px;
+                    background-color: white;
+                    clip-path: polygon(50% 100%, 0 0, 100% 0);
+                }
+            }
+        }
+
+        #emojis{
+            position: absolute;
+            bottom: 2em;
+            left: -2em;
+            transform: scale(0) translateY(30px);
+            opacity: 0;
+            transition: 0.5s all;
+            z-index: 1;
+        }
+
+        textarea{
+            padding: 0.25em 1.5em;
+            border: 1px solid #E8E8E8;
+            width: 100%;
+            border-radius: 100px;
+            z-index: 2;
+        }
+
+        .actions{
+            @include dFlex()
+        }
+    }
+
+    #closed{
+        margin-bottom: 4em;
+        text-align: center;
+
+        > p{
+            margin-bottom: 1em;
+        }
+
+        img{
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1em auto;
+        }
+
+        .ticketTitle{
+            @include dFlex();
+
+            p{
+                width: 500px;
+            }
+
+            &:before, &:after{
+                content: '';
+                width: 100%;
+                height: 1px;
+                background-color: #707070;
+            }
+        }
+    }
+}
+
+
+.redCard{
+    background-color: #E74C3C;
+}
+
+.orangeCard{
+    background-color: #E67E22;
+}
+
+.purpleCard{
+    background-color: #9B59B6;
+}
+
+.blueCard{
+    background-color: #3498DB;
+}
+
+.cyanCard{
+    background-color: #1ABC9C;
+}
+
+.emojisToggle{
+    opacity: 1!important;
+    transform: scale(1) translateY(0)!important;
+}
+
+.online{
+    position: relative;
+    @include dFlex();
+
+    &:before{
+        content: '';
+        position: absolute;
+        top: 1.5px;
+        left: 1px;
+        width: 12px;
+        height: 12px;
+        border-radius: 100%;
+        background-color: green;
+    }
+
+    &:after{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 15px;
+        height: 15px;
+        box-shadow: 0 0 0 1px green;
+        border-radius: 100%;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}

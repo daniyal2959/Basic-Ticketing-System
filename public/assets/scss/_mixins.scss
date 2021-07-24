@@ -1,0 +1,44 @@
+@mixin dFlex($flex-direction: row, $justify-content: center, $align-items: center) {
+    display: flex;
+    flex-direction: $flex-direction;
+    justify-content: $justify-content;
+    align-items: $align-items;
+}
+
+@mixin button($background-color: transparent) {
+    border: $borderWidth $borderType #EEEDED;
+    border-radius: $buttonBorderRadius;
+    padding: $buttonPadding;
+    @if ($background-color: transparent) {
+        color: $darkText;
+    }
+
+    @else{
+        color: $lightText;
+    }
+}
+
+@mixin reportCard($background-color) {
+    background-color: $background-color;
+    border-radius: $reportRadius;
+    box-shadow: $reportShadow;
+}
+
+@mixin user() {
+    margin: $userMargin;
+    padding: $userPadding;
+    border: $borderWidth $borderType #FFFFFF;
+
+    @include dFlex(row, flex-start);
+}
+
+@mixin avatar() {
+    border-radius: $avatarRadius;
+}
+
+@mixin userSelect() {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}

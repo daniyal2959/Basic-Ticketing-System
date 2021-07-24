@@ -1,0 +1,25 @@
+.strongPass{
+    color: green!important;
+}
+
+.mediumPass{
+    color: orange!important;
+}
+
+.weakPass{
+    color: red!important;
+}
+
+.darkInputs{
+    background-color: #383d42;
+    border: unset;
+}
+
+.card, .card input, .card .custom-file, .card textarea, .activeDark, .card .card-header, .card .card-header h3, #panel table thead th, #panel table td, .breadcrumb{
+    transition: 0.4s all!important;
+}
+
+.activeDark, .dropdown-item.text-white:hover{
+    background-color: #1d1d1d!important;
+}
+
