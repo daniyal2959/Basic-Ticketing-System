@@ -14,6 +14,8 @@ class UserType extends Model
 {
     protected $table = 'user_type';
 
+    public $timestamps = false;
+
     public function users()
     {
         $this->hasMany(User::class, 'UTID');
