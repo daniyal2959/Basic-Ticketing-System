@@ -28,11 +28,11 @@
                     <div class="card-header bg-transparent pb-5">
                         <div class="text-muted text-center mt-2 mb-3"><small>@yield('PageSignText')</small></div>
                         <div class="btn-wrapper text-center">
-                            <a href="#" class="btn btn-neutral btn-icon">
+                            <a href="{{ route('platform.redirect', ['platform' => 'github']) }}" class="btn btn-neutral btn-icon">
                                 <span class="btn-inner--icon"><img src="/assets/img/icons/common/github.svg"></span>
                                 <span class="btn-inner--text">Github</span>
                             </a>
-                            <a href="#" class="btn btn-neutral btn-icon">
+                            <a href="{{ route('platform.redirect', ['platform' => 'google']) }}" class="btn btn-neutral btn-icon">
                                 <span class="btn-inner--icon"><img src="/assets/img/icons/common/google.svg"></span>
                                 <span class="btn-inner--text">Google</span>
                             </a>

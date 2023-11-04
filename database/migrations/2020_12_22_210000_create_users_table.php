@@ -24,6 +24,9 @@ class CreateUsersTable extends Migration
             $table->string('province')->nullable();
             $table->string('city')->nullable();
             $table->string('postal_code')->nullable();
+            $table->string('platform_id')->nullable();
+            $table->string('platform_token')->nullable();
+            $table->string('platform_refresh_token')->nullable();
             $table->foreignId('UTID')->constrained('user_type');
             $table->foreignId('DID')->nullable()->constrained('departments');
             $table->rememberToken();

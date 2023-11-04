@@ -17,6 +17,8 @@ Route::post('/', [AuthController::class, 'check'])->name('check');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register', [AuthController::class, 'signup'])->name('signup');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/auth/{platform}/redirect', [AuthController::class, 'redirect'])->name('platform.redirect');
+Route::get('/auth/{platform}/callback', [AuthController::class, 'callback'])->name('platform.callback');
 
 Route::get('/dashboard/tickets/opened', [TicketController::class, 'opened'])->name('openedTicket');
 Route::get('/dashboard/tickets/inProgress', [TicketController::class, 'inProgress'])->name('inProgressTicket');

@@ -7,6 +7,7 @@ use App\Models\UserType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -65,5 +66,28 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         return redirect()->route('login');
+    }
+
+    public function redirect($platform)
+    {
+        return Socialite::driver($platform)->redirect();
+    }
+
+    public function callback($platform)
+    {
+        $platformUser = Socialite::driver($platform)->user();
+        $user = User::where('email', $platformUser->getEmail())->first();
+        if( !$user ){
+            $user->name = $platformUser->getName();
+            $user->email = $platformUser->getEmail();
+            $user->email_verified_at = now();
+            $user->platform_token = $platformUser->token;
+            $user->platform_refresh_token = $platformUser->refreshToken;
+            $user->UTID = 1;
+            $user->save();
+        }
+        Auth::login($user);
+
+        return redirect()->route('dashboard');
     }
 }
