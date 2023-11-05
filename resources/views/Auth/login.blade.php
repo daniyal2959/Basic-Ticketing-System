@@ -13,20 +13,26 @@
         <form action="{{ route('check') }}" method="POST" role="form">
             @csrf
             <div class="form-group mb-3">
-                <div class="input-group input-group-merge input-group-alternative">
+                <div class="input-group input-group-merge input-group-alternative @error('email') border border-danger @enderror">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                     </div>
-                    <input class="form-control" placeholder="Email" type="email" name="email">
+                    <input class="form-control" placeholder="Email" type="email" name="email" value="{{ old('email') }}">
                 </div>
+                @error('email')
+                <small class="text-danger">{{ $message }}</small>
+                @enderror
             </div>
             <div class="form-group">
-                <div class="input-group input-group-merge input-group-alternative">
+                <div class="input-group input-group-merge input-group-alternative @error('password') border border-danger @enderror">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                     </div>
-                    <input class="form-control" placeholder="Password" type="password" name="password">
+                    <input class="form-control" placeholder="Password" type="password" name="password"">
                 </div>
+                @error('password')
+                <small class="text-danger">{{ $message }}</small>
+                @enderror
             </div>
             <div class="custom-control custom-control-alternative custom-checkbox">
                 <input name="remember" class="custom-control-input" id=" customCheckLogin" type="checkbox">

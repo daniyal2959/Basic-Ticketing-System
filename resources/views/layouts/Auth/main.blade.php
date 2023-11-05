@@ -22,6 +22,15 @@
     </div>
     <!-- Page content -->
     <div class="container mt--8 pb-5">
+        @error('login')
+            <div class="position-fixed top-2 right-2 alert alert-danger alert-dismissible fade show" style="z-index: 200" role="alert">
+                <span class="alert-icon"><i class="ni ni-air-baloon"></i></span>
+                <span class="alert-text"><strong>Error!</strong> {{ $message }}!</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
         <div class="row justify-content-center">
             <div class="col-lg-5 col-md-7">
                 <div class="card bg-secondary border-0 mb-0">

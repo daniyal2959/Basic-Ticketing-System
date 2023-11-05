@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SignInRequest;
+use App\Http\Requests\SignUpRequest;
 use App\Models\User;
 use App\Models\UserType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -14,35 +17,25 @@ class AuthController extends Controller
 
     public function login()
     {
-//        return Hash::make('12345678');
-        return response(view('Auth.login'));
+        return view('Auth.login');
     }
 
-    public function check(Request $request)
+    public function check(SignInRequest $request)
     {
         $loginDatas = $request->only('email', 'password');
-        if( Auth::attempt($loginDatas) ){
-
+        if( Auth::attempt($loginDatas) )
             return redirect()->route('dashboard');
-        }
 
-        return redirect()->route('login');
+        return redirect()->route('login')->withErrors(['login' => 'Username or Password is incorrect']);
     }
 
     public function register()
     {
-        return response(view('Auth.register'));
+        return view('Auth.register');
     }
 
-    public function signup(Request $request)
+    public function signup(SignUpRequest $request)
     {
-        $request->validate([
-            'name'=>'required',
-            'email'=>'required|email',
-            'password'=>'required|min:8',
-            'privacy' => 'accepted'
-        ]);
-
         $user = new User();
         $userType = UserType::find(1);
 
