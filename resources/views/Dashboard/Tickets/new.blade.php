@@ -1,6 +1,6 @@
 @extends('layouts.Dashboard.main')
 @php
-$formAction = route('store');
+$formAction = route('dashboard.tickets.store');
 $ticketTitle = '';
 $pageTitle = 'ثبت تیکت جدید | سیستم ارتباط با مشتریان آرگون';
 $ticketDepartment = 0;

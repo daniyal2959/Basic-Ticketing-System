@@ -3,7 +3,7 @@
     <div class="container-fluid">
         <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <!-- Search form -->
-            <form method="GET" action="{{ route('search') }}" class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
+            <form method="GET" action="{{ route('dashboard.search') }}" class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
                 <div class="form-group mb-0">
                     <div class="input-group input-group-alternative input-group-merge">
                         <div class="input-group-prepend">
@@ -33,7 +33,7 @@
                         <div class="dropdown-header noti-title">
                             <h6 class="text-overflow m-0">Welcome!</h6>
                         </div>
-                        <a href="{{ route('userProfile') }}" class="dropdown-item">
+                        <a href="{{ route('dashboard.user.userProfile') }}" class="dropdown-item">
                             <i class="ni ni-single-02"></i>
                             <span>My profile</span>
                         </a>

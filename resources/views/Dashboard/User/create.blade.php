@@ -9,7 +9,7 @@
     $userPostalCode = '';
     $userTypeID = 0;
     $userDepartmentID = 0;
-    $formAction = route('storeUser');
+    $formAction = route('dashboard.user.storeUser');
     $submitButton = 'Create User';
 
     if(!empty($user)){
@@ -23,7 +23,7 @@
         $userPostalCode = $user->postal_code;
         $userTypeID = $user->UTID;
         $userDepartmentID = $user->DID;
-        $formAction = route('updateUser');
+        $formAction = route('dashboard.user.updateUser');
         $submitButton = 'Update User';
 
     }

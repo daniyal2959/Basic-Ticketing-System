@@ -1,11 +1,11 @@
 @php
     $title = 'ثبت دپارتمان جدید | سیستم ارتباط با مشتریان آرگون';
-    $formAction = route('storeDepartment');
+    $formAction = route('dashboard.departments.storeDepartment');
     $departmentName = '';
     $submitButton = 'Add Department';
     if( !empty($department) ){
         $title = 'ویرایش دپارتمان | سیستم ارتباط با مشتریان آرگون';
-        $formAction = route('updateDepartment');
+        $formAction = route('dashboard.departments.updateDepartment');
         $departmentName = $department->name;
         $submitButton = 'Update Department';
     }

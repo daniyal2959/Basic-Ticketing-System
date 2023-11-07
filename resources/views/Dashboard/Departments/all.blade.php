@@ -31,7 +31,7 @@
                     <strong>{{ $department->getTotalTicketCountWithStatus($department->id, 3) }}</strong>
                 </td>
                 <td>
-                    <form action="{{ route('deleteDepartment') }}" method="POST" class="mx-1 d-inline-block">
+                    <form action="{{ route('dashboard.departments.deleteDepartment') }}" method="POST" class="mx-1 d-inline-block">
                         @csrf
                         @method('delete')
                         <input type="hidden" name="_id" value="{{ $department->id }}">

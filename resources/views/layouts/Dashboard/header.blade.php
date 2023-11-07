@@ -25,7 +25,7 @@
     </div>
     @if(Route::currentRouteName() != 'newTicket')
         <div class="col-lg-6 col-5 text-right">
-            <a href="{{ route('create') }}" class="btn btn-default">New ticket</a>
+            <a href="{{ route('dashboard.tickets.create') }}" class="btn btn-default">New ticket</a>
         </div>
     @endif
 </div>

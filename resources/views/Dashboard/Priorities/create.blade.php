@@ -1,12 +1,12 @@
 @php
     $title = 'ثبت اولویت جدید | سیستم ارتباط با مشتریان آرگون';
-    $formAction = route('storePriority');
+    $formAction = route('dashboard.priorities.storePriority');
     $priorityName = '';
     $submitButton = 'Add Priority';
     $priorityColor = '#5e72e4';
     if( !empty($priority) ){
         $title = 'ویرایش اولویت | سیستم ارتباط با مشتریان آرگون';
-        $formAction = route('updatePriority');
+        $formAction = route('dashboard.priorities.updatePriority');
         $priorityName = $priority->name;
         $submitButton = 'Update Priority';
         $priorityColor = $priority->color;

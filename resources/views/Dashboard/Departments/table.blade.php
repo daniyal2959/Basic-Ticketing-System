@@ -38,7 +38,7 @@
             @endif
         </div>
         <div class="col text-right">
-            <a href="{{ route('createDepartment') }}" class="btn btn-primary">Add departments</a>
+            <a href="{{ route('dashboard.departments.createDepartment') }}" class="btn btn-primary">Add departments</a>
         </div>
     </div>
 

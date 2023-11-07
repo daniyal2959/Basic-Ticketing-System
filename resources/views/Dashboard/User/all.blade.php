@@ -16,7 +16,7 @@
                 </td>
                 <td>
                     @if($user->UTID != 3)
-                    <form action="{{ route('deleteUser') }}" method="POST" class="mx-1 d-inline-block">
+                    <form action="{{ route('dashboard.user.deleteUser') }}" method="POST" class="mx-1 d-inline-block">
                         @csrf
                         @method('delete')
                         <input type="hidden" name="_id" value="{{ $user->id }}">
@@ -62,7 +62,7 @@
                     <strong>{{ $customer->getTotalInProgressTickets() }}</strong>
                 </td>
                 <td>
-                    <form action="{{ route('deleteUser') }}" method="POST" class="mx-1 d-inline-block">
+                    <form action="{{ route('dashboard.user.deleteUser') }}" method="POST" class="mx-1 d-inline-block">
                         @csrf
                         @method('delete')
                         <input type="hidden" name="_id" value="{{ $customer->id }}">
@@ -83,8 +83,6 @@
         </tr>
     @endif
 @endsection
-
-
 
 @section('supporterUserContent')
     @if( $supporters->isNotEmpty() )

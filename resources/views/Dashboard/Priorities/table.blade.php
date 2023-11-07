@@ -34,7 +34,7 @@
             @endif
         </div>
         <div class="col text-right">
-            <a href="{{ route('createPriority') }}" class="btn btn-primary">Add priority</a>
+            <a href="{{ route('dashboard.priorities.createPriority') }}" class="btn btn-primary">Add priority</a>
         </div>
     </div>
 

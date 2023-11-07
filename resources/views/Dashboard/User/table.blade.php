@@ -92,7 +92,7 @@
             @endif
         </div>
         <div class="col text-right">
-            <a href="{{ route('createUser') }}" class="btn btn-primary">Add user</a>
+            <a href="{{ route('dashboard.user.createUser') }}" class="btn btn-primary">Add user</a>
         </div>
     </div>
 @endsection

@@ -15,7 +15,7 @@
                     <i class="fas fa-circle mr-3" style="color: {{ $priority->color }}"></i>
                 </td>
                 <td>
-                    <form action="{{ route('deletePriority') }}" method="POST" class="mx-1 d-inline-block">
+                    <form action="{{ route('dashboard.priorities.deletePriority') }}" method="POST" class="mx-1 d-inline-block">
                         @csrf
                         @method('delete')
                         <input type="hidden" name="_id" value="{{ $priority->id }}">
