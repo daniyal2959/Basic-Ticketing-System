@@ -10,9 +10,10 @@ use App\Models\UserType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
+use TypeError;
 
 class UserController extends Controller
 {
@@ -61,78 +62,69 @@ class UserController extends Controller
 
     }
 
-    private function showTickets($ticketStatusID){
+    /**
+     * Get all tickets with specific status
+     *
+     * @param TicketStatus|int|null $ticketStatus
+     *
+     */
+    private function getTickets($ticketStatus = null){
+        if ( !($ticketStatus instanceof TicketStatus) and !is_int($ticketStatus) and !is_null($ticketStatus) )
+            throw new TypeError('The parameter must be instance of TicketStatus or integer number');
 
-        if(Auth::user()->UTID == 1) {
+        /**
+         * Get all tickets that refers to current user
+         */
+        if ( is_null($ticketStatus) )
+            return Auth::user()->tickets()->paginate(7);
 
-            if ($ticketStatusID == 0) {
-                $tickets = Ticket::where('UID', '=', Auth::user()->id)->paginate(7);
-            }
-            else {
-                $tickets = Ticket::where([
-                    ['UID', '=', Auth::user()->id],
-                    ['TSID', '=', $ticketStatusID]
-                ])->paginate(7);
-            }
-
-            $tickets->isEmpty() ? $result = collect() : $result = $tickets;
-
-            return $tickets;
-
-        }
-
-        elseif(Auth::user()->UTID == 2) {
-            if ($ticketStatusID == 0) {
-                $tickets = Ticket::where('DID', '=', Auth::user()->department->id)->paginate(7);
-            }
-            else {
-                $tickets = Ticket::where([
-                    ['DID', '=', Auth::user()->department->id],
-                    ['TSID', '=', $ticketStatusID]
-                ])->paginate(7);
-            }
-
-            $tickets->isEmpty() ? $result = collect() : $result = $tickets;
-
-            return $tickets;
-        }
-
-        elseif(Auth::user()->UTID == 3) {
-            if ($ticketStatusID == 0) {
-                $tickets = Ticket::paginate(7);
-            }
-            else {
-                $tickets = Ticket::where('TSID', '=', $ticketStatusID)->paginate(7);
-            }
-
-            $tickets->isEmpty() ? $result = collect() : $result = $tickets;
-
-            return $tickets;
-        }
-
-        else{
-            return collect();
-        }
+        /**
+         * Get all tickets that refers to current user with chosen status
+         */
+        return Auth::user()->tickets()->where('TSID', is_int($ticketStatus) ? $ticketStatus : $ticketStatus->id)->paginate(7);
     }
 
-    private function getTickets()
+    /**
+     * Set all parameters that will be passed to view
+     *
+     * @return array
+     */
+    private function setParametersForView()
     {
-        $allTickets = $this->showTickets(0);
-        $openedTickets = $this->showTickets(1);
-        $inProgressTickets = $this->showTickets(2);
-        $answeredTickets = $this->showTickets(3);
-        $closedTickets = $this->showTickets(4);
+        $parameter = [];
+        $settings = Config::get('settings');
 
-        $rateCount = $answeredTickets->count() + $closedTickets->count();
-        $rateCount == 0 ? $allTicketCount = 1 : $allTicketCount = $rateCount;
-        $rate = number_format(($rateCount / $allTicketCount) * 100,1);
+        $parameter['data'][] = [
+            'title' => 'All Tickets',
+            'icon' => 'ni ni-tag',
+            'url' => route('dashboard.tickets.index'),
+            'items' => $this->getTickets(),
+        ];
 
-        $result['allTickets'] = $allTickets;
-        $result['open'] = $openedTickets;
-        $result['inProgress'] = $inProgressTickets;
-        $result['rate'] = $rate;
+        foreach ($settings['dashboard']['cards'] as $ticketStatusName){
+            $ticketStatus = TicketStatus::where('name', $ticketStatusName)->first();
 
-        return $result;
+            $parameter['data'][$ticketStatusName] = [
+                'title' => $ticketStatus->title,
+                'icon' => $ticketStatus->icon_name,
+                'background' => $ticketStatus->icon_background_color,
+                'url' => route('statusArchive', ['status' => $ticketStatus->name]),
+                'items' => $this->getTickets($ticketStatus->id),
+                'asTable' => true
+            ];
+        }
+
+        $parameter['data'][] = [
+            'title' => 'Answered Rate',
+            'icon' => 'ni ni-chart-bar-32',
+            'count' => Ticket::rate($settings['tickets']['rate']) . '%'
+        ];
+
+        $parameter['colors'] = $settings['colors']['cards'];
+
+        $parameter['tables'] = $settings['dashboard']['cards'];
+
+        return $parameter;
     }
 
     public function allUsers()
@@ -140,14 +132,18 @@ class UserController extends Controller
         $users = User::with('department')->paginate(7);
         $customers = User::where('UTID', '=', 1)->paginate(7);
         $supporters = User::where('UTID', '=', 2)->paginate(7);
-        return view('Dashboard.User.all', compact('users', 'customers', 'supporters'));
+        $ticketStatuses = TicketStatus::all();
+
+        return view('Dashboard.User.all', compact('users', 'customers', 'supporters', 'ticketStatuses'));
     }
 
     public function index()
     {
         $user = Auth::user();
-        $result = $this->getTickets();
-        return response(view('Dashboard.Profile.edit', compact('user', 'result')));
+        $parameters = $this->setParametersForView();
+        $ticketStatuses = TicketStatus::all();
+
+        return response(view('Dashboard.Profile.edit', compact('user', 'parameters', 'ticketStatuses')));
     }
 
     public function update(Request $request)
@@ -198,7 +194,9 @@ class UserController extends Controller
         $result = collect();
         $userTypes = UserType::all();
         $departments = Department::all();
-        return view('Dashboard.User.create', compact('userTypes', 'departments', 'result'));
+        $ticketStatuses = TicketStatus::all();
+
+        return view('Dashboard.User.create', compact('userTypes', 'departments', 'result', 'ticketStatuses'));
     }
 
     public function store(Request $request)
@@ -230,22 +228,26 @@ class UserController extends Controller
         $result = $this->getTickets();
         $userTypes = UserType::all();
         $departments = Department::all();
-        return view('Dashboard.User.create', compact('user', 'userTypes', 'departments', 'result'));
+        $ticketStatuses = TicketStatus::all();
+
+        return view('Dashboard.User.create', compact('user', 'userTypes', 'departments', 'result', 'ticketStatuses'));
     }
 
     public function delete(Request $request)
     {
         $user = User::find($request->_id);
         $user->delete();
-        return redirect()->route('allUsers');
+        return redirect()->route('dashboard.users.allUsers');
     }
 
     public function dashboard()
     {
         $chartResult = $this->chartValues(6);
-        $result = $this->getTickets();
+        $parameters = $this->setParametersForView();
+        $ticketStatuses = TicketStatus::all();
 
-        return view('Dashboard.dashboard', compact('result','chartResult'));
+        return view('Dashboard.dashboard', compact('parameters','chartResult', 'ticketStatuses'));
     }
 
 }
+

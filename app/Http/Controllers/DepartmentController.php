@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use App\Models\Ticket;
+use App\Models\TicketStatus;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -11,12 +12,16 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::paginate(7);
-        return view('Dashboard.Departments.all', compact('departments'));
+        $ticketStatuses = TicketStatus::all();
+
+        return view('Dashboard.Departments.all', compact('departments', 'ticketStatuses'));
     }
 
     public function create()
     {
-        return view('Dashboard.Departments.create');
+        $ticketStatuses = TicketStatus::all();
+
+        return view('Dashboard.Departments.create', compact('ticketStatuses'));
     }
 
     public function store(Request $request)
@@ -42,7 +47,9 @@ class DepartmentController extends Controller
 
     public function edit(Department $department)
     {
-        return view('Dashboard.Departments.create', compact('department'));
+        $ticketStatuses = TicketStatus::all();
+
+        return view('Dashboard.Departments.create', compact('department', 'ticketStatuses'));
     }
 
     public function update(Request $request)
@@ -55,6 +62,6 @@ class DepartmentController extends Controller
         $department->name = $request->name;
         $department->save();
 
-        return redirect()->route('allDepartments');
+        return redirect()->route('dashboard.departments.allDepartments');
     }
 }

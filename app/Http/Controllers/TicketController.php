@@ -13,58 +13,26 @@ use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
-    private function showTickets($ticketStatusID){
+    /**
+     * Get all tickets with specific status
+     *
+     * @param TicketStatus|int|null $ticketStatus
+     *
+     */
+    private function getTickets($ticketStatus = null){
+        if ( !($ticketStatus instanceof TicketStatus) and !is_int($ticketStatus) and !is_null($ticketStatus) )
+            throw new TypeError('The parameter must be instance of TicketStatus or integer number');
 
-        if(Auth::user()->UTID == 1) {
+        /**
+         * Get all tickets that refers to current user
+         */
+        if ( is_null($ticketStatus) )
+            return Auth::user()->tickets()->paginate(7);
 
-            if ($ticketStatusID == 0) {
-                $tickets = Ticket::where('UID', '=', Auth::user()->id)->paginate(7);
-            }
-            else {
-                $tickets = Ticket::where([
-                    ['UID', '=', Auth::user()->id],
-                    ['TSID', '=', $ticketStatusID]
-                ])->paginate(7);
-            }
-
-            $tickets->isEmpty() ? $result = collect() : $result = $tickets;
-
-            return $tickets;
-
-        }
-
-        elseif(Auth::user()->UTID == 2) {
-            if ($ticketStatusID == 0) {
-                $tickets = Ticket::where('DID', '=', Auth::user()->department->id)->paginate(7);
-            }
-            else {
-                $tickets = Ticket::where([
-                    ['DID', '=', Auth::user()->department->id],
-                    ['TSID', '=', $ticketStatusID]
-                ])->paginate(7);
-            }
-
-            $tickets->isEmpty() ? $result = collect() : $result = $tickets;
-
-            return $tickets;
-        }
-
-        elseif(Auth::user()->UTID == 3) {
-            if ($ticketStatusID == 0) {
-                $tickets = Ticket::paginate(7);
-            }
-            else {
-                $tickets = Ticket::where('TSID', '=', $ticketStatusID)->paginate(7);
-            }
-
-            $tickets->isEmpty() ? $result = collect() : $result = $tickets;
-
-            return $tickets;
-        }
-
-        else{
-            return collect();
-        }
+        /**
+         * Get all tickets that refers to current user with chosen status
+         */
+        return Auth::user()->tickets()->where('TSID', is_int($ticketStatus) ? $ticketStatus : $ticketStatus->id)->paginate(7);
     }
 
     /**
@@ -74,8 +42,10 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $tickets = $this->showTickets(0);
-        return response(view('Dashboard.Tickets.all', compact('tickets')));
+        $tickets = $this->getTickets();
+        $ticketStatuses = TicketStatus::all();
+
+        return response(view('Dashboard.Tickets.all', compact('tickets', 'ticketStatuses')));
     }
 
     /**
@@ -88,7 +58,9 @@ class TicketController extends Controller
         $ticket = collect();
         $departments = Department::all();
         $priorities = Priority::all();
-        return response(view('Dashboard.Tickets.new', compact('ticket','departments', 'priorities')));
+        $ticketStatuses = TicketStatus::all();
+
+        return response(view('Dashboard.Tickets.new', compact('ticket','departments', 'priorities', 'ticketStatuses')));
     }
 
     /**
@@ -117,7 +89,7 @@ class TicketController extends Controller
         $message->UID = Auth::user()->id;
         $message->save();
 
-        return redirect()->route('create');
+        return redirect()->route('dashboard.tickets.create');
     }
 
     /**
@@ -157,7 +129,9 @@ class TicketController extends Controller
     {
         $departments = Department::all();
         $priorities = Priority::all();
-        return response(view('Dashboard.Tickets.new', compact('ticket', 'departments', 'priorities')));
+        $ticketStatuses = TicketStatus::all();
+
+        return response(view('Dashboard.Tickets.new', compact('ticket', 'departments', 'priorities', 'ticketStatuses')));
     }
 
     /**
@@ -200,47 +174,10 @@ class TicketController extends Controller
         return back();
     }
 
-    /**
-     * Display Opened Tickets
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function opened()
-    {
-        $tickets = $this->showTickets(1);
-        return response(view('Dashboard.Tickets.opened', compact('tickets')));
-    }
+    public function statusArchive($status){
+        $tickets = $this->getTickets(TicketStatus::where('name', $status)->first());
+        $ticketStatuses = TicketStatus::all();
 
-    /**
-     * Display In Progress Tickets
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function inProgress()
-    {
-        $tickets = $this->showTickets(2);
-        return response(view('Dashboard.Tickets.inProgress', compact('tickets')));
-    }
-
-    /**
-     * Display Answered Tickets
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function answered()
-    {
-        $tickets = $this->showTickets(3);
-        return response(view('Dashboard.Tickets.answered', compact('tickets')));
-    }
-
-    /**
-     * Display Closed Tickets
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function closed()
-    {
-        $tickets = $this->showTickets(4);
-        return response(view('Dashboard.Tickets.closed', compact('tickets')));
+        return view('Dashboard.Tickets.closed', compact('tickets', 'ticketStatuses'));
     }
 }

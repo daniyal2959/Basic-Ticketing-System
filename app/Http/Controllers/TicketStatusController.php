@@ -15,7 +15,9 @@ class TicketStatusController extends Controller
 
     public function create()
     {
-        return view('Dashboard.TicketStatuses.create');
+        $ticketStatuses = TicketStatus::all();
+
+        return view('Dashboard.TicketStatuses.create', compact('ticketStatuses'));
     }
 
     public function store(Request $request)
@@ -25,7 +27,10 @@ class TicketStatusController extends Controller
         ]);
 
         $ticketStatus = new TicketStatus();
+        $ticketStatus->title = $request->title;
         $ticketStatus->name = $request->name;
+        $ticketStatus->icon_name = $request->icon_name;
+        $ticketStatus->icon_color = $request->icon_color;
         $ticketStatus->save();
 
         return back();
@@ -41,7 +46,9 @@ class TicketStatusController extends Controller
 
     public function edit(TicketStatus $ticketStatus)
     {
-        return view('Dashboard.TicketStatuses.create', compact('ticketStatus'));
+        $ticketStatuses = TicketStatus::all();
+
+        return view('Dashboard.TicketStatuses.create', compact('ticketStatus', 'ticketStatuses'));
     }
 
     public function update(Request $request)
@@ -51,9 +58,12 @@ class TicketStatusController extends Controller
         ]);
 
         $ticketStatus = TicketStatus::find($request->_id);
+        $ticketStatus->title = $request->title;
         $ticketStatus->name = $request->name;
+        $ticketStatus->icon_name = $request->icon_name;
+        $ticketStatus->icon_color = $request->icon_color;
         $ticketStatus->save();
 
-        return redirect()->route('allTicketStatuses');
+        return redirect()->route('dashboard.status.allTicketStatuses');
     }
 }

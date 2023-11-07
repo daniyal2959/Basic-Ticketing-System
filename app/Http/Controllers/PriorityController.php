@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Priority;
+use App\Models\TicketStatus;
 use Illuminate\Http\Request;
 
 class PriorityController extends Controller
@@ -10,12 +11,16 @@ class PriorityController extends Controller
     public function index()
     {
         $priorities = Priority::paginate(7);
-        return view('Dashboard.Priorities.all', compact('priorities'));
+        $ticketStatuses = TicketStatus::all();
+
+        return view('Dashboard.Priorities.all', compact('priorities', 'ticketStatuses'));
     }
 
     public function create()
     {
-        return view('Dashboard.Priorities.create');
+        $ticketStatuses = TicketStatus::all();
+
+        return view('Dashboard.Priorities.create', compact('ticketStatuses'));
     }
 
     public function store(Request $request)
@@ -42,7 +47,9 @@ class PriorityController extends Controller
 
     public function edit(Priority $priority)
     {
-        return view('Dashboard.Priorities.create', compact('priority'));
+        $ticketStatuses = TicketStatus::all();
+
+        return view('Dashboard.Priorities.create', compact('priority', 'ticketStatuses'));
     }
 
     public function update(Request $request)
@@ -56,7 +63,7 @@ class PriorityController extends Controller
         $priority->color = $request->color;
         $priority->save();
 
-        return redirect()->route('allPriorities');
+        return redirect()->route('dashboard.priorities.allPriorities');
 
     }
 }

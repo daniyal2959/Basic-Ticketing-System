@@ -17,7 +17,7 @@
                         your business</p>
                 </div>
                 <div class="col-lg-5 col-md-2 d-flex justify-content-end align-items-center">
-                    <a class="btn btn-neutral" href="{{ route('create') }}">New Ticket</a>
+                    <a class="btn btn-neutral" href="{{ route('dashboard.tickets.create') }}">New Ticket</a>
                 </div>
             </div>
         </div>
@@ -48,22 +48,12 @@
                     <div class="row">
                         <div class="col">
                             <div class="card-profile-stats d-flex justify-content-center">
-                                <div>
-                                    <span class="heading">{{ $result['allTickets']->count() }}</span>
-                                    <span class="description">Total</span>
-                                </div>
-                                <div>
-                                    <span class="heading">{{ $result['open']->count() }}</span>
-                                    <span class="description">Open</span>
-                                </div>
-                                <div>
-                                    <span class="heading">{{ $result['inProgress']->count() }}</span>
-                                    <span class="description">Progress</span>
-                                </div>
-                                <div>
-                                    <span class="heading">{{ $result['rate'] }}%</span>
-                                    <span class="description">Rate</span>
-                                </div>
+                                @foreach($parameters['data'] as $parameter)
+                                    <div>
+                                        <span class="heading">{{ isset($parameter['items']) ? $parameter['items']->count() : $parameter['count'] }}</span>
+                                        <span class="description">{{ $parameter['title'] }}</span>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -90,7 +80,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('updateUser') }}">
+                    <form method="POST" action="{{ route('dashboard.user.updateUser') }}">
                         @csrf
                         @method('patch')
                         <h6 class="heading-small text-muted mb-4">User information</h6>
@@ -182,7 +172,7 @@
                          aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
-                                <form action="{{ route('updateUserPassword') }}" method="POST">
+                                <form action="{{ route('dashboard.user.updateUserPassword') }}" method="POST">
                                     @csrf
                                     @method('put')
                                     <div class="modal-header">

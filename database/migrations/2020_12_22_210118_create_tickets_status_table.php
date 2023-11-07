@@ -16,6 +16,9 @@ class CreateTicketsStatusTable extends Migration
         Schema::create('tickets_status', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('title');
+            $table->string('icon_name');
+            $table->string('icon_color');
         });
     }
 

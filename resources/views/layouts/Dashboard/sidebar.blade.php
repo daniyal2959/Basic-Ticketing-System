@@ -3,7 +3,7 @@
     <div class="scrollbar-inner">
         <!-- Brand -->
         <div class="sidenav-header  align-items-center">
-            <a class="navbar-brand" href="{{ route('dashboard') }}">
+            <a class="navbar-brand" href="{{ route('dashboard.index') }}">
                 <img src="/assets/img/brand/blue.png" class="navbar-brand-img" alt="...">
             </a>
         </div>
@@ -13,7 +13,7 @@
                 <!-- Nav items -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link {{ Route::currentRouteName() === 'dashboard' ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                        <a class="nav-link {{ Route::currentRouteName() === 'dashboard' ? 'active' : '' }}" href="{{ route('dashboard.index') }}">
                             <i class="ni ni-tv-2 text-primary"></i>
                             <span class="nav-link-text">Dashboard</span>
                         </a>
@@ -24,30 +24,14 @@
                             <span class="nav-link-text">All Tickets</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Route::currentRouteName() === 'openedTicket' ? 'active' : '' }}" href="{{ route('openedTicket') }}">
-                            <i class="ni ni-archive-2 text-primary"></i>
-                            <span class="nav-link-text">Opened</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Route::currentRouteName() === 'inProgressTicket' ? 'active' : '' }}" href="{{ route('inProgressTicket') }}">
-                            <i class="ni ni-user-run text-danger"></i>
-                            <span class="nav-link-text">In Progress</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Route::currentRouteName() === 'answeredTicket' ? 'active' : '' }}" href="{{ route('answeredTicket') }}">
-                            <i class="ni ni-support-16 text-yellow"></i>
-                            <span class="nav-link-text">Answered</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Route::currentRouteName() === 'closedTicket' ? 'active' : '' }}" href="{{ route('closedTicket') }}">
-                            <i class="ni ni-check-bold text-success"></i>
-                            <span class="nav-link-text">Closed</span>
-                        </a>
-                    </li>
+                    @foreach($ticketStatuses as $status)
+                        <li class="nav-item">
+                            <a class="nav-link {{ Route::currentRouteName() === $status->name ? 'active' : '' }}" href="{{ route('statusArchive', ['status' => $status->name]) }}">
+                                <i class="{{ $status->icon_name }} text-{{ $status->icon_color }}"></i>
+                                <span class="nav-link-text">{{ ucfirst($status->title) }}</span>
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
                 <!-- Divider -->
                 <hr class="my-3">
@@ -58,14 +42,14 @@
                 <!-- Navigation -->
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
-                        <a class="nav-link {{ Route::currentRouteName() === 'userProfile' ? 'active' : '' }}" href="{{ route('userProfile') }}">
+                        <a class="nav-link {{ Route::currentRouteName() === 'userProfile' ? 'active' : '' }}" href="{{ route('dashboard.user.userProfile') }}">
                             <i class="ni ni-paper-diploma text-info"></i>
                             <span class="nav-link-text">Profile</span>
                         </a>
                     </li>
                     @if(Auth::user()->UTID == 3)
                     <li class="nav-item">
-                        <a class="nav-link {{ Route::currentRouteName() === 'allUsers' ? 'active' : '' }}" href="{{ route('allUsers') }}">
+                        <a class="nav-link {{ Route::currentRouteName() === 'allUsers' ? 'active' : '' }}" href="{{ route('dashboard.allUsers') }}">
                             <i class="ni ni-single-02 text-pink"></i>
                             <span class="nav-link-text">Users</span>
                         </a>
@@ -81,19 +65,19 @@
                 </h6>
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
-                        <a href="{{ route('allDepartments') }}" class="nav-link {{ Route::currentRouteName() === 'allDepartments' ? 'active' : '' }}">
+                        <a href="{{ route('dashboard.departments.allDepartments') }}" class="nav-link {{ Route::currentRouteName() === 'allDepartments' ? 'active' : '' }}">
                             <i class="ni ni-building text-orange"></i>
                             <span class="nav-link-text">Departments</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('allPriorities') }}" class="nav-link {{ Route::currentRouteName() === 'allPriorities' ? 'active' : '' }}">
+                        <a href="{{ route('dashboard.priorities.allPriorities') }}" class="nav-link {{ Route::currentRouteName() === 'allPriorities' ? 'active' : '' }}">
                             <i class="ni ni-chart-bar-32 text-indigo"></i>
                             <span class="nav-link-text">Priorities</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('allTicketStatuses') }}" class="nav-link {{ Route::currentRouteName() === 'allTicketStatuses' ? 'active' : '' }}">
+                        <a href="{{ route('dashboard.status.allTicketStatuses') }}" class="nav-link {{ Route::currentRouteName() === 'allTicketStatuses' ? 'active' : '' }}">
                             <i class="ni ni-bell-55 text-green"></i>
                             <span class="nav-link-text">Ticket Status</span>
                         </a>

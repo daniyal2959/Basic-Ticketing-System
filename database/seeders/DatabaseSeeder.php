@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             [
                 UserTypeSeeder::class,
                 UserSeeder::class,
+                TicketStatusSeeder::class
             ]
         );
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
