@@ -65,6 +65,15 @@
                 </h6>
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
+                        <a href="{{ route('dashboard.modules.allModules') }}" class="nav-link {{ Route::currentRouteName() === 'allModules' ? 'active' : '' }}">
+                            <i class="ni ni-settings-gear-65 text-primary"></i>
+                            <span class="nav-link-text">
+                                <span class="mr-2">Modules</span>
+                                <span class="badge badge-circle badge-success">{{ \App\Classes\Module::count() }}</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('dashboard.departments.allDepartments') }}" class="nav-link {{ Route::currentRouteName() === 'allDepartments' ? 'active' : '' }}">
                             <i class="ni ni-building text-orange"></i>
                             <span class="nav-link-text">Departments</span>
