@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->hasMany(Message::class, 'UID');
     }
 
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class);
+    }
+
     public function getTotalOpenedTickets()
     {
         return $this->hasMany(Ticket::class, 'UID')->where('TSID', '=', 1)->count();

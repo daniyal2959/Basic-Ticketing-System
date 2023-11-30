@@ -17,116 +17,6 @@ use TypeError;
 
 class UserController extends Controller
 {
-    private $tsOpen = 1;
-    private $tsInProgress = 2;
-    private $tsAnswered = 3;
-    private $tsClosed = 4;
-
-    private function chartValues($monthCount, $barChart = true){
-        $nowMonth = Carbon::now()->month;
-        $nowYear = Carbon::now()->year;
-        $month = [];
-        $year = [];
-        $ticketCount = [];
-        $result = [];
-
-        for ($i = 0; $i<$monthCount; $i++){
-            $month[] = $nowMonth;
-            $year[] = $nowYear;
-
-            if( $barChart ) {
-                $ticketCount[] = Ticket::where([
-                    [DB::raw("DATE_FORMAT(created_at, '%Y')"), '=', $nowYear],
-                    [DB::raw("DATE_FORMAT(created_at, '%c')"), '=', $nowMonth],
-                    ['UID', '=', Auth::user()->id],
-                ])->count();
-            }
-            else{
-                $ticketCount[] = Ticket::where([
-                    [DB::raw("DATE_FORMAT(created_at, '%Y')"), '=', $nowYear],
-                    [DB::raw("DATE_FORMAT(created_at, '%c')"), '=', $nowMonth],
-                    ['UID', '=', Auth::user()->id],
-                    ['TSID', '<>', $this->tsAnswered],
-                ])->count();
-            }
-
-            $nowMonth -= 1;
-            if( $nowMonth <= 0 ){
-                $nowMonth = 12;
-                $nowYear -= 1;
-            }
-        }
-
-        array_push($result, $month,$ticketCount);
-        return $result;
-
-    }
-
-    /**
-     * Get all tickets with specific status
-     *
-     * @param TicketStatus|int|null $ticketStatus
-     *
-     */
-    private function getTickets($ticketStatus = null){
-        if ( !($ticketStatus instanceof TicketStatus) and !is_int($ticketStatus) and !is_null($ticketStatus) )
-            throw new TypeError('The parameter must be instance of TicketStatus or integer number');
-
-        /**
-         * Get all tickets that refers to current user
-         */
-        if ( is_null($ticketStatus) )
-            return Auth::user()->tickets()->paginate(7);
-
-        /**
-         * Get all tickets that refers to current user with chosen status
-         */
-        return Auth::user()->tickets()->where('TSID', is_int($ticketStatus) ? $ticketStatus : $ticketStatus->id)->paginate(7);
-    }
-
-    /**
-     * Set all parameters that will be passed to view
-     *
-     * @return array
-     */
-    private function setParametersForView()
-    {
-        $parameter = [];
-        $settings = Config::get('settings');
-
-        $parameter['data'][] = [
-            'title' => 'All Tickets',
-            'icon' => 'ni ni-tag',
-            'url' => route('dashboard.tickets.index'),
-            'items' => $this->getTickets(),
-        ];
-
-        foreach ($settings['dashboard']['cards'] as $ticketStatusName){
-            $ticketStatus = TicketStatus::where('name', $ticketStatusName)->first();
-
-            $parameter['data'][$ticketStatusName] = [
-                'title' => $ticketStatus->title,
-                'icon' => $ticketStatus->icon_name,
-                'background' => $ticketStatus->icon_background_color,
-                'url' => route('statusArchive', ['status' => $ticketStatus->name]),
-                'items' => $this->getTickets($ticketStatus->id),
-                'asTable' => true
-            ];
-        }
-
-        $parameter['data'][] = [
-            'title' => 'Answered Rate',
-            'icon' => 'ni ni-chart-bar-32',
-            'count' => Ticket::rate($settings['tickets']['rate']) . '%'
-        ];
-
-        $parameter['colors'] = $settings['colors']['cards'];
-
-        $parameter['tables'] = $settings['dashboard']['cards'];
-
-        return $parameter;
-    }
-
     public function allUsers()
     {
         $users = User::with('department')->paginate(7);
@@ -140,7 +30,7 @@ class UserController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $parameters = $this->setParametersForView();
+        $parameters = setParametersForView();
         $ticketStatuses = TicketStatus::all();
 
         return response(view('Dashboard.Profile.edit', compact('user', 'parameters', 'ticketStatuses')));
@@ -242,8 +132,8 @@ class UserController extends Controller
 
     public function dashboard()
     {
-        $chartResult = $this->chartValues(6);
-        $parameters = $this->setParametersForView();
+        $chartResult = chartValues(6);
+        $parameters = setParametersForView();
         $ticketStatuses = TicketStatus::all();
 
         return view('Dashboard.dashboard', compact('parameters','chartResult', 'ticketStatuses'));

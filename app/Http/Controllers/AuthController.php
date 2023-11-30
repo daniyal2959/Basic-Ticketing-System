@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SignInRequest;
 use App\Http\Requests\SignUpRequest;
+use App\Models\Company;
 use App\Models\User;
 use App\Models\UserType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -23,8 +25,12 @@ class AuthController extends Controller
     public function check(SignInRequest $request)
     {
         $loginDatas = $request->only('email', 'password');
-        if( Auth::attempt($loginDatas) )
-            return redirect()->route('dashboard.index');
+        if( Auth::attempt($loginDatas) ) {
+            if( Str::lower(Auth::user()->user_type->name) != 'admin' )
+                return redirect()->route('dashboard.companies.show', ['company' => Str::lower(Company::first()->name)]);
+            else
+                return redirect()->route('dashboard.index');
+        }
 
         return redirect()->route('login')->withErrors(['login' => 'Username or Password is incorrect']);
     }
@@ -81,6 +87,9 @@ class AuthController extends Controller
         }
         Auth::login($user);
 
-        return redirect()->route('dashboard.index');
+        if( Str::lower(Auth::user()->user_type->name) != 'admin' )
+            return redirect()->route('dashboard.companies.show', ['company' => Str::lower(Company::first()->name)]);
+        else
+            return redirect()->route('dashboard.index');
     }
 }

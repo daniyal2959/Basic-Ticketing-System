@@ -5,6 +5,7 @@
 <script src="/assets/vendor/js-cookie/js.cookie.js"></script>
 <script src="/assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
 <script src="/assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+<script src="/assets/js/select2.min.js"></script>
 <!-- Custom JS -->
 <script src="/assets/js/sidebar.js"></script>
 @if(Route::currentRouteName() == 'createUser' or Route::currentRouteName() == 'editUser')
@@ -49,6 +50,7 @@
     </script>
 @endif
 
+@stack('extra_js')
 
 </body>
 

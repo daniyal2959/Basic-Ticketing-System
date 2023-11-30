@@ -81,3 +81,24 @@ document.querySelector('#nightMode').addEventListener('click', ()=>{
         element.classList.toggle('text-white');
     })
 });
+
+$(document).ready(function() {
+    $('#tenancy').select2({
+        theme: 'tenancy',
+        minimumResultsForSearch: -1,
+        templateResult: state => {
+            if (!state.id) {
+                return state.text;
+            }
+
+            return state.title;
+        }
+    });
+});
+
+$('#tenancy').on("select2:select", function(e) {
+    if( window.location.port !== '80' )
+        window.location.href = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/dashboard/companies/${e.currentTarget.value}`;
+    else
+        window.location.href = `${window.location.protocol}//${window.location.hostname}/dashboard/companies/${e.currentTarget.value}`;
+});

@@ -2,7 +2,14 @@
 <nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
     <div class="scrollbar-inner">
         <!-- Brand -->
-        <div class="sidenav-header  align-items-center">
+        <div class="sidenav-header navbar-inner d-flex align-items-center justify-content-between">
+            @if( Str::lower(\Illuminate\Support\Facades\Auth::user()->user_type->name) != "admin" )
+                <select style="padding: 0.75rem 0.25rem 0.75rem 0.25rem; cursor:pointer; outline: none" class="border-0 bg-primary rounded-lg text-white" id="tenancy">
+                    @foreach($companies as $item)
+                        <option title="{{ $item->name }}" value="{{ \Illuminate\Support\Str::lower($item->name) }}" @if( \Illuminate\Support\Str::lower($company->name) == \Illuminate\Support\Str::lower($item->name) ) selected @endif>{{ $item->excerpt }}</option>
+                    @endforeach
+                </select>
+            @endif
             <a class="navbar-brand" href="{{ route('dashboard.index') }}">
                 <img src="/assets/img/brand/blue.png" class="navbar-brand-img" alt="...">
             </a>

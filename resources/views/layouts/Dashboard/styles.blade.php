@@ -15,5 +15,9 @@
     <link rel="stylesheet" href="/assets/css/argon.min.css?v=1.2.0" type="text/css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/assets/css/main.css" type="text/css">
+
+    <link rel="stylesheet" href="/assets/css/select2/select2.min.css">
+    <link rel="stylesheet" href="/assets/css/select2/themes/tenancy.css">
+
 </head>
 <body>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ModuleController;
@@ -25,11 +26,20 @@ Route::get('/auth/{platform}/callback', [AuthController::class, 'callback'])->na
  * Ticket Status Routes
  */
 Route::get('/dashboard/tickets/status/{status}', [TicketController::class, 'statusArchive'])->name('statusArchive');
+
 /**
  * Dashboard Routes
  */
 Route::prefix('/dashboard')->middleware('auth')->name('dashboard.')->group(function (){
     Route::get('/', [UserController::class, 'dashboard'])->name('index');
+
+    /**
+     * Companies Routes
+     */
+    Route::resource('/companies', CompanyController::class);
+    Route::prefix('/companies/{company}')->name('companies.')->group(function (){
+
+    });
 
     /**
      * Tickets Routes
