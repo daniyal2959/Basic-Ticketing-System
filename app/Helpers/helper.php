@@ -128,6 +128,12 @@ if( !function_exists('chartValues') ){
 }
 
 
+/**
+ * Split company name with uppercase letters then concatenate theirs together
+ *
+ * @param Collection $companies
+ * @return Collection
+ */
 if( !function_exists('addExcerptToCompanies') ){
     function addExcerptToCompanies(Collection $companies){
         $companies->map(function ($company){
@@ -136,5 +142,17 @@ if( !function_exists('addExcerptToCompanies') ){
                 $company->excerpt .= Str::upper(substr($spice,0,1));
             return $company;
         });
+    }
+}
+
+/**
+ * Get route name with its name
+ *
+ * @param string $url
+ * @return string
+ */
+if( !function_exists('getRouteNameByURL') ){
+    function getRouteNameByURL($url){
+        return app('router')->getRoutes()->match(app('request')->create($url))->getName();
     }
 }
