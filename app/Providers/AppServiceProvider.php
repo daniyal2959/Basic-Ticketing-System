@@ -2,8 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Company;
-use Illuminate\Http\Request;
+use App\Models\Group;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -32,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Paginator::defaultView('vendor.pagination.paginator');
         $this->passAllCompaniesTpBladesIfExists();
+        $this->passAllMenusToBladesIfExists();
     }
 
     public function passAllCompaniesTpBladesIfExists()
@@ -41,6 +41,16 @@ class AppServiceProvider extends ServiceProvider
                 $companies = Auth::user()->companies()->get();
                 addExcerptToCompanies($companies);
                 $view->with(compact('companies'));
+            }
+        });
+    }
+
+    public function passAllMenusToBladesIfExists()
+    {
+        View::composer('*', function ($view){
+            if( Auth::hasUser() ) {
+                $groups = Group::all()->load('menus');
+                $view->with(compact('groups'));
             }
         });
     }
